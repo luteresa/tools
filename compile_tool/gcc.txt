@@ -1,0 +1,65 @@
+对于GCC编译器，有如下选项：
+        -D macro=string，等价于在头文件中定义：#define   macro   string。例如：-D TRUE=true，等价于：#define   TRUE   true
+        -D macro，等价于在头文件中定义：#define   macro   1，实际上也达到了定义：#define   macro的目的。例如：-D LINUX，等价于：#define   LINUX   1（与#define   LINUX作用类似）。
+        --define-macro   macro=string与-D macro=string作用相同。
+
+
+
+
+yyb@frontendserver:~/work/app$ ls
+a.out  environ.c  fork.c  hello  hello.c  hello.o  Makefile
+yyb@frontendserver:~/work/app$ vi hello.c 
+
+#include <stdio.h>                                                                              
+#include <stdlib.h>
+ 
+#if (DEF == 1)
+int isvalid = 1;
+#else
+int isvalid = 0;
+#endif
+int main(int argc, char *argv[])
+{
+    if (isvalid == 1)
+    {
+ 
+        printf("login sucess,welcome.\n");
+     }
+    else
+    {
+        printf("sorry, login failed.\n");
+     }
+
+     return 0;
+}
+~                                                                                                   
+~                                                                                                   
+~                                                                                                   
+~                                                                                                   
+~                                                                                                   
+~                                                                                                   
+~                                                                                                   
+~                                                                                                   
+~                                                                                                   
+~                                                                                                   
+~                                                                                                   
+~                                                                                                   
+~                                                                                                   
+~                                                                                                   
+~                                                                                                   
+yyb@frontendserver:~/work/app$ ls
+a.out  environ.c  fork.c  hello  hello.c  hello.o  Makefile
+yyb@frontendserver:~/work/app$ vi Makefile 
+
+  1 TARGET = hello
+  2 all:$(TARGET)
+  3 CC = gcc
+  4 
+  5 CFLAGS += -D DEF=$(AA_NAME)                                                                     
+  6 $(info "aaa"$(CFLAGS))
+  7 
+ $(TARGET):hello.o
+    $(CC) $^ -o $@ $(CFLAGS)
+clean:
+   rm hello.o hello
+~                                            
