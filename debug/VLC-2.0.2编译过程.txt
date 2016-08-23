@@ -1,0 +1,54 @@
+缘由：
+
+研究H264的RTP封装时发现大家都使用VLC进行实验，那么我也不搞特殊化，先试试
+
+环境：
+
+ubuntu 10.04LTS
+
+过程：
+
+0）下载最新的vlc：http://www.videolan.org/
+
+1）sudo ./configure
+
+configure: error: Could not find lua. Lua is needed for some interfaces (rc, telnet, http) as well as many other custom scripts.
+
+=》sudo apt-get install lua5.1 liblua5.1-dev
+
+configure: error: Could not find libmad on your system: you may get it from http://www.underbit.com/products/mad/.
+
+=》sudo apt-get install libmad0-dev
+
+configure: error: No package 'libpostproc' found. 
+
+=》sudo apt-get install libpostproc-dev
+
+configure: error: Could not find liba52 on your system: you may get it from http://liba52.sf.net/.
+
+=》sudo apt-get install liba52-dev
+configure: error: Package requirements (xcb >= 1.6) were not met:Requested 'xcb >= 1.6' but version of XCB is 1.5
+
+=》由于10.04上最新只有1.5.2，所以只能到http://xcb.freedesktop.org/dist/上下载最新的tarball，我下的是1.7的版本，即libxcb-1.7.tar.gz 和xcb-proto-1.7.tar.gz 装好就可以了（先装后者，否则前者装不上）
+
+configure: error: libgcrypt version 1.1.94 or higher not found.
+
+=》sudo apt-get install libgcrypt11-dev
+
+2）sudo make
+
+3）sudo make install
+
+
+
+备注：
+本人ubuntu上已安装最新的ffmpeg，所以部分包如libavcodec-dev libavformat-dev等已经安装，无须重复
+
+
+部分参考：
+
+http://www.ehow.com/how_8356303_compile-vlc-ubuntu.html
+
+文章重点如下，可作为参考：
+
+sudo apt-get install -y libdbus-1-dev lua5.1 liblua5.1-dev libmad0-dev libavcodec-dev libavformat-dev libswscale-dev libpostproc-dev liba52-dev libxcb1-dev libxcb-shm0-dev libxcb-xv0-dev libx11-xcb-dev libgl1-mesa-dev libqt4-dev libgcrypt11-dev
