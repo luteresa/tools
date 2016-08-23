@@ -1,0 +1,210 @@
+李群林(李群林) 06-27 17:46:23
+你是说JIRA吧
+李群林(李群林) 06-27 17:48:27
+加好了
+http://192.168.13.22:8080
+用户名密码都是你的姓名全拼
+
+
+1.添加用户
+sudo adduser xxx
+
+2.添加samba共享：为方便，直接共享个人的home目录
+sudo vim /etc/samba/smb.conf 
+照着该文件添加即可，各用户只有名字不同，比如
+[yyb_work]
+path = /home/yyb/
+available = yes
+browsable = yes
+create mask = 0664
+directory mask = 0775
+writeable = yes
+valid users = yyb
+
+sudo smbd start
+ps:samba访问用户名密码默认与登录帐号相同，也可以自己另外单独设置
+
+3.添加nfs挂载点：
+首先要用户在个人home目录下创建nfs目录，为方便，权限可以设置为777；
+sudo vim /etc/exports 
+照样添加用户信息即可，
+/home/yyb/nfs *(rw,sync,no_subtree_check)
+添加完成后，执行以下命令生效
+sudo /etc/init.d/nfs-kernel-server restart
+
+mount -o nolock 192.168.13.252:/home/xxx/nfs/  ./netmount 
+
+添加用户组：
+sudo groupadd xxxgroup
+sudo usermod -a -G xxxgroup xxxuser
+
+
+Ubuntu14.04遇到的问题：
+问题1：编译器不能正常执行，-bash: ./arm-unknown-linux-uclibcgnueabi-gcc: No such file or directory
+解决：64位机，32位程序兼容问题，安装以下库即可
+sudo apt-get install ia32-libs
+sudo apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0
+
+2.添加用户，并有sudo权限
+2.1.切换到root用户下
+
+2.2.添加sudo文件的写权限,命令是:
+chmod u+w /etc/sudoers
+
+2.3.编辑sudoers文件
+vi /etc/sudoers
+找到这行 root ALL=(ALL) ALL,在他下面添加xxx ALL=(ALL) ALL (这里的xxx是你的用户名)
+
+ps:这里说下你可以sudoers添加下面四行中任意一条
+youuser            ALL=(ALL)                ALL
+%youuser           ALL=(ALL)                ALL
+youuser            ALL=(ALL)                NOPASSWD: ALL
+%youuser           ALL=(ALL)                NOPASSWD: ALL
+
+第一行:允许用户youuser执行sudo命令(需要输入密码).
+第二行:允许用户组youuser里面的用户执行sudo命令(需要输入密码).
+第三行:允许用户youuser执行sudo命令,并且在执行的时候不输入密码.
+第四行:允许用户组youuser里面的用户执行sudo命令,并且在执行的时候不输入密码.
+
+2.4.撤销sudoers文件写权限,命令:
+chmod u-w /etc/sudoers
+
+这样普通用户就可以使用sudo了.
+
+3.配置时区
+yyb@frontendserver:~$ date -R
+Fri, 15 May 2015 01:26:08 +0800
+yyb@frontendserver:~$ tz
+tzconfig  tzselect  
+yyb@frontendserver:~$ tz
+tzconfig  tzselect  
+yyb@frontendserver:~$ sudo tzselect 
+Please identify a location so that time zone rules can be set correctly.
+Please select a continent, ocean, "coord", or "TZ".
+ 1) Africa
+ 2) Americas
+ 3) Antarctica
+ 4) Arctic Ocean
+ 5) Asia
+ 6) Atlantic Ocean
+ 7) Australia
+ 8) Europe
+ 9) Indian Ocean
+10) Pacific Ocean
+11) coord - I want to use geographical coordinates.
+12) TZ - I want to specify the time zone using the Posix TZ format.
+#? 5
+Please select a country whose clocks agree with yours.
+ 1) Afghanistan           18) Israel                35) Palestine
+ 2) Armenia               19) Japan                 36) Philippines
+ 3) Azerbaijan            20) Jordan                37) Qatar
+ 4) Bahrain               21) Kazakhstan            38) Russia
+ 5) Bangladesh            22) Korea (North)         39) Saudi Arabia
+ 6) Bhutan                23) Korea (South)         40) Singapore
+ 7) Brunei                24) Kuwait                41) Sri Lanka
+ 8) Cambodia              25) Kyrgyzstan            42) Syria
+ 9) China                 26) Laos                  43) Taiwan
+10) Cyprus                27) Lebanon               44) Tajikistan
+11) East Timor            28) Macau                 45) Thailand
+12) Georgia               29) Malaysia              46) Turkmenistan
+13) Hong Kong             30) Mongolia              47) United Arab Emirates
+14) India                 31) Myanmar (Burma)       48) Uzbekistan
+15) Indonesia             32) Nepal                 49) Vietnam
+16) Iran                  33) Oman                  50) Yemen
+17) Iraq                  34) Pakistan
+#? 9
+Please select one of the following time zone regions.
+1) Beijing Time
+2) Xinjiang Time
+#? 1
+
+The following information has been given:
+
+        China
+        Beijing Time
+
+Therefore TZ='Asia/Shanghai' will be used.
+Local time is now:      Fri May 15 01:26:55 CST 2015.
+Universal Time is now:  Thu May 14 17:26:55 UTC 2015.
+Is the above information OK?
+1) Yes
+2) No
+#? 1
+
+You can make this change permanent for yourself by appending the line
+        TZ='Asia/Shanghai'; export TZ
+to the file '.profile' in your home directory; then log out and log in again.
+
+Here is that TZ value again, this time on standard output so that you
+can use the /usr/bin/tzselect command in shell scripts:
+Asia/Shanghai
+yyb@frontendserver:~$ date
+2015年 05月 15日 星期五 01:27:11 CST
+yyb@frontendserver:~$ date -R
+Fri, 15 May 2015 01:27:18 +0800
+yyb@frontendserver:~$ 
+
+
+3../test.upack: source: not found
+ubuntu中请使用
+#! /bin/bash
+
+$ ls /bin/sh  -l
+lrwxrwxrwx 1 root root 4  5月 15 09:35 /bin/sh -> bash
+
+4.arm-hisiv400-linux-gcc: error while loading shared libraries: libstdc++.so.6: cannot open shared object file: No such file or directory
+
+解决：
+$sudo apt-get install libstdc++6 
+$sudo apt-get install lib32stdc++6
+
+
+5.编译内核错误：  
+UIMAGE  arch/arm/boot/uImage
+"mkimage" command not found - U-Boot images will not be built
+make[1]: *** [arch/arm/boot/uImage] Error 1
+
+解决：
+sudo apt-get install u-boot-tools 
+
+6.安装mkfs.jffs2
+sudo apt-get install mtd-tools
+
+7.make menuconfig出错问题：
+yyb@frontendserver:~/gm/8139/arm-linux-3.3/linux-3.3-fa$ make menuconfig
+  HOSTCC  scripts/basic/fixdep
+  HOSTCC  scripts/kconfig/conf.o
+ *** Unable to find the ncurses libraries or the
+ *** required header files.
+ *** 'make menuconfig' requires the ncurses libraries.
+ *** 
+ *** Install ncurses (ncurses-devel) and try again.
+ *** 
+make[1]: *** [scripts/kconfig/dochecklxdialog] Error 1
+make: *** [menuconfig] Error 2
+解决：
+sudo apt-get install libncurses5-dev
+
+8.makefile自动生成工具
+./autogen.sh: 4: autoreconf: not found
+  是在不同版本的 tslib 下执行 autogen.sh 产生。它们产生的原因一样,是
+因为没有安装
+  automake 工具,      (ubuntu 8.04)用下面的命令安装好就可以了。
+  sudo apt-get install autoconf automake libtool
+
+
+9.内核编译默认添加了SVN版本控制校验
+
+log: version magic '3.3.0 preempt mod_unload ARMv5 ' should be '3.3.0-svn87 preempt mod_unload ARMv5 '
+ms: version magic '3.3.0 preempt mod_unload ARMv5 ' should be '3.3.0-svn87 preempt mod_unload ARMv5 '
+
+KERNELRELEASE = $(shell cat include/config/kernel.release 2> /dev/null)    
+
+
+
+10.应用打印无输出，在rootfs根文件系统dev目录下：
+在dev目录中创建2个字符设备,可以先查看完整linux系统中的相关文件属性,再创建一样的
+
+sudo mknod console c 5 1
+
+sudo mknod null c 1 3
