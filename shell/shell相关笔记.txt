@@ -1,0 +1,123 @@
+1.Shell分两种：交互式shell和批处理；
+
+2.交互式shell：在命令行输入一个命令后，一般情况下shell会fork并exec改命令，但shell的内建命令例外，内建命令相当于调用shell进程的一个函数；比如cd,exit,umask,alias,for,while等，凡是which查不到的命令都是内建命令，内建命令没有单独man手册，查询内建命令用：man bash-builtins；
+
+3.用户默认Shell设置在/etc/passwd中，要切换到其他shell，直接执行程序名即可；
+
+4.scrpt.sh
+直接执行./script.sh，shell会fork一个子进程来exec ./script.sh程序；
+/bin/sh script.sh 这时不需要script.sh有执行权限；
+
+5.cd ..; ls -l--》当前shell执行该命令；
+(cd ..; ls -l)--》相当于一个shell脚本；
+
+6. source ./script.sh 或者  . ./script.sh
+source或者.命令是Shell内建命令，这种方式不会创建子Shell，直接在交互式Shell逐行执行脚本命令；
+
+7.Shell的变量
+环境变量：可以从父进程传给子进程，用printenv可以查看当前Shell进程的环境变量；
+本地变量：只存在于当前Shell进程，set命令可以显示当前Shell进程中定义的所有变量；
+用export命令可以把本地变量到处为环境变量
+$export VARNAME=value
+或者
+$VARNAME=value
+$export VARNAME
+用unset命令可以删除已定义的环境变量或者本地变量：
+$unset VARNAME
+
+8.通配符
+*：匹配任意多个字符
+?：匹配任意一个字符
+[若干字符]：匹配方括号中任意一个字符的一次出现
+
+$ ls /dev/ttyS*
+$ ls ch0?.doc
+$ ls ch0[0-2].doc
+$ ls ch[012][0-9].doc
+
+9.命令代换：反引号'或者$()
+DATE=$(date)等价于DATE='date'
+
+10.算术代换：$(())
+$(())中只能+-*/和()运算，并且只能做证书运算；
+
+11.转义字符\  :
+1)紧跟其后的字符取字面值；
+2)touch -hello  //-号做文件名会报错，加\转义也出错
+因为UNIX中命令都把-号开头的命令行参数当作命令的选项，不会当作文件名，非要以-号开头做文件名可以：
+touch ./-hello
+或者
+touch -- -hello
+3)还有个用法，在\后敲回车，Shell把光标移到下一行，出现一个续航提示符，等待用户输入，最后把续行连一起当一个命令；
+
+12.单引号：保持所有引号内的字符字面值，但内部不能再出现单引号
+
+13.双引号：保持引号内所有字符的字面值（包括回车），但一下情况除外：
+1)反引号仍表示命令替换
+2）\$  \`  \"  \\ 除了这四个之外，其他字符前的\无特殊含义，只表示字面值；
+
+14.Shell登录过程
+一，登录Shell
+1）首先执行/etc/profile，每个用户登录都会执行这个脚本；
+2）然后依次查找当前用户主目录的~/.bash_profile, ~/.bash_login,~/.profile
+3）推出登录时会执行~/.bash_logout脚本，如果存在的话；
+二，交互非登录Shell
+比如在图形下开终端或在登录Shell里再输入bash命令，这种Shell启东市自动执行~/.bashrc,为了使登录Shell也能自动执行~/.bashrc，通常再~/.bash_profile调用~/.bashrc
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+fi
+
+15.sh命令启动
+如果以sh命令启动bash,bash将模拟sh的行为，哪些以~/.bash_开头的启动脚本就不认了，如果作为交互Shelld登录，就会执行1）/etc/profile; 2)~/.profile
+
+如果作为非登录Shell，则不执行任何启动脚本，通常我们写的Shell脚本都已#!/bin/sh开头，都属于这种；
+
+
+16.条件测试
+1）test 或 [测试一个条件是否成立，测试结果为真，返回0，否则返回1；
+[ -d DIR ]:如果DIR存在并且是一个目录则为真
+[ -f FILE ]：如果FILE存在且是一个普通文件则为真；
+[ -z STRING ]：如果STRING的长度为零则为真
+[ -n STRING ]：如果STRING的长度非零则为真
+[ STRING1 = STRING2 ]：两个字符串相当则为真
+[ STRING1 != STRING2 ]：两个字符串不相同则为真
+[ ARG1 OP ARG2 ]：ARG1和ARG2是正数或整数的变量，OP是-eq(等于)，-ne（不等于）， -lt（小于）， -le（小于等于）， -gt（大于）， -ge（大于等于）之中的一个
+
+2）跟C预言类似，还可以做与、或、非逻辑运算
+[ ！ EXPR ]:逻辑反
+[ EXPR1 -a EXPR2 ]：EXPR1与EXPR2
+[ EXPR1 -o EXPR2 ]: EXPR1或EXPR2
+等价于 
+[ EXPR1 && EXPR2 ]
+[ EXPR1 || EXPR2 ]
+
+17.$ VAR=abc
+$ [ -d Desktop -a $VAR = 'abc' ]
+$ echo $?
+0
+上例中VAR变量如果没先定义，Shell展开为空字符串，会造成条件测试语法错误，作为一个好习惯，应该总是把变量取值放在双引号之中；
+
+$ unset VAR
+$ [ -d Desktop -a $VAR = 'abc' ]
+bash: [: too many arguments
+$ [ -d Desktop -a "$VAR" = 'abc' ]
+$ echo $?
+1
+
+18.:是一个空命令，不做任何事，但Exit Status总是真，也可以执行/bin/true或/bin/false得到真或假的Exit Status。
+
+19.&&和||语法相当于
+“if...then...”和"if not...then..."
+
+20.case/esac语句，Shell的case可以匹配字串和通配符，每个匹配分支必须以;;结尾，执行时找到第一个匹配的分支并执行相应的命令，然后跳到esac之后，case语句的例子在/ec/init.d目录下很多；
+case $1 in
+	yes|y|Yes|YES)
+		...
+		;;
+	[nN])
+		...
+		;;
+exac
+
+
+

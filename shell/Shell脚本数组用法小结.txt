@@ -1,0 +1,88 @@
+Shell脚本数组用法小结
+array作为一种数据结构，在一些高级语言中都是有直接提供和实现的，当然我shell中也是有的哈。
+
+PS：写这篇文章的原因是B哥在群里发了一个截图：
+
+我大B哥依然是全能型人才哈。。。废话少说，说下正题
+
+1、怎么声明一个数组变量？
+
+直接赋值：
+复制代码 代码如下:
+
+array[0]=”Zero” array[1]=”One” array[2]=”Two”
+
+declare声明：
+复制代码 代码如下:
+declare -a array
+
+小括号空格法：
+复制代码 代码如下:
+array=(Zero One Two)
+
+引号空格法：
+复制代码 代码如下:
+array=”Zero One Two”
+
+混合法：
+复制代码 代码如下:
+array=([0]=”Zero” [1]=”One” [2]=”Two”)
+
+2、怎么遍历一个数组？
+
+标准for循环：
+复制代码 代码如下:
+
+[ chenqing@Qing ~  ] for(( i=0;i<${#array[@]};i++)) do echo ${array[i]}; done;
+Zero
+One
+Two
+
+for…in:
+复制代码 代码如下:
+
+[ chenqing@Qing ~  ] for i in ${array[@]};do echo $i ;done
+Zero
+One
+Two
+
+3、获取数组的长度
+
+复制代码 代码如下:
+
+[ chenqing@Qing ~  ] echo ${#array[@]}
+3
+[ chenqing@Qing ~  ] echo ${#array[*]}
+3
+
+4、删除数组元素
+
+复制代码 代码如下:
+
+[ chenqing@Qing ~  ] unset array[0]
+[ chenqing@Qing ~  ] echo ${#array[@]}
+2
+[ chenqing@Qing ~  ] for i in ${array[@]};do echo $i ;done
+One
+Two
+
+5、删除数组
+
+复制代码 代码如下:
+
+unset array
+
+6、和python一样的切片
+
+复制代码 代码如下:
+
+[ chenqing@Qing ~  ] echo ${array[@]:0:1}
+Zero
+[ chenqing@Qing ~  ] echo ${array[@]:0:2}
+Zero One
+[ chenqing@Qing ~  ] echo ${array[@]:0:3}
+Zero One Two
+[ chenqing@Qing ~  ] echo ${array[@]:1}
+One Two
+[ chenqing@Qing ~  ] echo ${array[@]:2}
+Two

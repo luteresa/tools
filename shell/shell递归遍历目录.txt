@@ -1,0 +1,21 @@
+#!/bin/bash
+# 定义一个方法
+foreachd(){
+# 遍历参数1 
+ echo $1
+        for file in $1/* 
+            do
+                # 如果是目录就打印处理，然后继续遍历，递归调用
+                if [ -d $file ]
+                then
+                    echo $file"是目录" 
+                    foreachd $file
+                elif [ -f $file ]
+                then
+                    ./dy.exe -f $file >>./log
+                fi
+            done
+}
+CURRENTPATH=${PWD}
+#echo $CURRENTPATH
+foreachd $1

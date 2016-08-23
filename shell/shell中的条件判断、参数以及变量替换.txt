@@ -1,0 +1,119 @@
+一、test命令
+
+　　test命令是shell内部命令，它计算作为其参数的表达式是真还是假。
+
+　　如果表达式为真，则test返回0（注意与C语言0表示false不同），如果表达式为假，返回非0。
+
+　　shell提供了另外一个调用test命令的方式，就是用方括号［］来代替单词test。
+
+　　调用test命令的格式为：
+
+　　　　test expr1 opr expr2 或是 [ expr1 opr expr2 ]
+
+　　　　test opr expr1 或是 [ opr expr1 ]
+
+　　（注意方括号与表达式之间的空格必须存在）
+
+二、逻辑运算符
+
+　　-a　　expr1 -a expr2　　逻辑与
+
+　　-o　　expr1 -o expr2　　逻辑或
+
+　　！　　!expr1　　　　　　逻辑非
+
+三、数值判断
+
+　　-eq　　num1 -eq num2　　是否相等
+
+　　-ne　　num1 -ne num2　　是否不相等
+
+　　-gt　　num1 -gt num2　　是否大于
+
+　　-ge　　num1 -ge num2　　是否大于等于
+
+　　-lt　　num1 -lt num2　　是否小于
+
+　　-le　　num1 -le num2　　是否小于等于
+
+四、字符串判断
+
+　　=　　str1 = str2　　字符串是否相等
+
+　　!=　　str1 != str2　　字符串是否不等
+
+　　-n　　-n str1　　　　字符串长度是否不等于0
+
+　　-z　　-z str2　　　　字符串长度是否等于0
+
+五、文件判断
+
+　　-r　　-r filename　　文件是否存在且可读
+
+　　-w　　-w filename　　文件是否存在且可写
+
+　　-s　　-s filename　　文件是否存在且长度非0
+
+　　-f　　-f filename　　文件是否存在且是普通文件
+
+　　-d　　-d filename　　文件是否存在且是一个目录
+
+六、命令行参数/位置变量
+
+　　$0　　脚本的名字
+
+　　$1, $2, ..., $9　　脚本第1个到第9个命令行参数
+
+　　$#　　命令行参数的个数
+
+　　$@ 或是 $*　　所有命令行参数
+
+　　$?　　最后一条命令的退出状态
+
+　　$$　　正在执行进程的ID（PID）
+
+　　给位置变量赋值：
+
+　　set One Two Three
+
+　　echo $1 $2 $3
+
+　　结果显示：One Two Three
+
+　　shift命令：
+
+　　　　这条命令可以对位置参数进行移动，每次调用都会导致：$1=$2、$2=$3、$3=$4....
+
+　　　　以下代码可以打印出所有的参数
+
+　　　　while [ -n "$1" ]
+
+　　　　do
+
+　　　　　　echo $1
+
+　　　　　　shift
+
+　　　　done
+
+七、
+
+　　当在对变量进行判断时最好将变量用双引号括起来，这样可以避免参数包含空格或是TAB带来的问题。
+
+　　如：”$HOME“、"$#"
+
+八、变量替换（赋值）
+
+　　shell提供了变量替换功能，使用户能够检查变量的值并根据选项改变它的值。
+
+　　$variable　　　　保存在variable中的值
+
+　　${variable}　　　　保存在variable中的值
+
+　　${variable:-string}　　如果variable的值非空，则值为variable，否则值为string
+
+　　${variable:+string}　　如果variable的值非空，则值为string，否则值为空
+
+　　${variable:=string}　　如果variable的值非空，则值为variable，否则值为string且variable的值设置为string
+
+　　${variable:?string}　　如果variable的值非空，则值为variable，否则显示string并退出

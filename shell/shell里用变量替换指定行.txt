@@ -1,0 +1,4 @@
+shell里用变量替换指定行：
+path="SDK_SRC="$(pwd)
+path=${path%/*}"/"
+sed -i "1c$path" module_conf

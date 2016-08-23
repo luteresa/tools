@@ -1,0 +1,20 @@
+如果想要在变量后面添加一个字符，可以用一下方法：
+
+$value1=home
+
+$value2=${value1}"="
+
+echo $value2
+
+把要添加的字符串变量添加{}，并且需要把$放到外面。
+
+这样输出的结果是：home=，也就是说连接成功。
+
+
+又如：
+
+[root@localhost sh]# var1=/etc/
+[root@localhost sh]# var2=yum.repos.d/
+[root@localhost sh]# var3=${var1}${var2}
+[root@localhost sh]# echo $var3
+/etc/yum.repos.d/

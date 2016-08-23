@@ -1,0 +1,86 @@
+和awk差不多的功能
+
+例1
+
+[plain] view plaincopy
+$ a=`echo root:x:0:0:root:/root:/bin/bash | cut -d : -f 1,5`  
+  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ echo $a  
+root:root  
+上面的例子中，把 root:x:0:0:root:/root:/bin/bash 重定向到cut命令里，-d表示分隔符，这里使用冒号: 作为分隔符，-f 表示字段，选择了第1，和第5个字段，
+例 2，只打印第一个字段field
+
+[plain] view plaincopy
+$ a=`echo root:x:0:0:root:/root:/bin/bash | cut -d :  -f 1`  
+  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ echo $a  
+root  
+例 3，打印第一个字段以后的所有字段，包含第一个字段
+[plain] view plaincopy
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ a=`echo root:x:0:0:root:/root:/bin/bash | cut -d : -f 1-`  
+  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ echo $a  
+root:x:0:0:root:/root:/bin/bash  
+  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ a=`echo root:x:0:0:root:/root:/bin/bash | cut -d : -f 3-`   // 打印第3个字段后的所有字段，包含第三个字段  
+  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ echo $a  
+0:0:root:/root:/bin/bash  
+例4 ，截取第2到第4个字段
+[plain] view plaincopy
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ a=`echo root:x:0:0:root:/root:/bin/bash | cut -d : -f 2-4`  
+  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ echo $a  
+x:0:0  
+例 5 截取指定个数的字符
+[plain] view plaincopy
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ a=`echo root:x:0:0:root:/root:/bin/bash | cut -c 2-5 ` // 截取第2到第5个字符  
+  
+  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ echo $a  
+oot:  
+  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ a=`echo root:x:0:0:root:/root:/bin/bash | cut -c 2-7 `  // 截取第2到第7个字符  
+  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ echo $a  
+oot:x:  
+  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ a=`echo root:x:0:0:root:/root:/bin/bash | cut -c -2 `   // 截取前两个字符  
+  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ echo $a  
+ro  
+  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ a=`echo root:x:0:0:root:/root:/bin/bash | cut -c 2- `    // 截取第2个以后的  
+  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ echo $a  
+oot:x:0:0:root:/root:/bin/bash  
+例 6 指定文件，最后一个参数是文件名
+
+[plain] view plaincopy
+$ cat pass.txt  
+root:x:0:0:root:/root:/bin/bash  
+bin:x:1:1:bin:/bin:/sbin/nologin  
+daemon:x:2:2:daemon:/sbin:/sbin/nologin  
+adm:x:3:4:adm:/var/adm:/sbin/nologin  
+shuohailhl@shuohailhl-PC /cygdrive/d  
+$ cut -d : -f 1-3 ./pass.txt  
+root:x:0  
+bin:x:1  
+daemon:x:2  
+adm:x:3  
