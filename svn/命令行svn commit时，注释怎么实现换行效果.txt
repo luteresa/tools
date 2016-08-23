@@ -1,0 +1,5 @@
+命令行svn commit时，注释怎么实现换行效果
+
+svn ci -m $'first linensecond line'
+svn ci -m $'1.去掉内核编译svn版本控制， 决就驱动无法加载问题；2.解决就驱动无法加载问题\n；3.修改编译脚
+本，加快编译时间;'  

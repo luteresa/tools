@@ -1,0 +1,3 @@
+svn提交时报错Commit blocked by pre-commit hook (exit code 1) with no output.
+1.检查是否comment写的太短；
+2.svn cleanup
