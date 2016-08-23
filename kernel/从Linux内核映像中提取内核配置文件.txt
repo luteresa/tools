@@ -1,0 +1,45 @@
+如果你是一个喜欢编译内核的狂人，同时也是经常忘记将默认的.config文件备份的懒家伙，那么下面的方法将会使你
+
+的内核配置工作变得更轻松，从linux 2.6开始内核提供了一种将.config附加到映像文件的方法，通过这种方法，内核
+
+配置者可以不必备份当前的.config文件，而是在需要的时候直接从内核映像中提取.config文件。步骤如下：
+
+1. 配置内核
+
+1.1 make menuconfig；
+
+1.2 选择如下：
+
+General setup  --->
+
+     <*> Kernel .config support                                     
+
+     [*]   Enable access to .config through /proc/config.gz
+
+1.3 make uImage
+
+2.  提取配置文件
+
+2.1 方法一，从uImage文件中提取：
+
+2.1.1 打开控制台，cd进入到linux源码树根目录，我的为：/root/Desktop/easy2440/linux-2.6.30.9-easy2440
+
+2.1.2 输入如下命令：scripts/extract-ikconfig arch/arm/boot/uImage > config
+
+2.1.3 命令执行完后，将会在linux源码树根目录下面生成config文件；
+
+2.1.4 config文件即为我们需要的内核配置文件，可以将其替代.config文件。
+
+2.2 方法二，从开发板的/proc/config.gz中提取：
+
+2.2.1 将新生成的uImage文件下载到开发板；
+
+2.2.2 准备串口控制台，启动开发板；
+
+2.2.3 开发板正常启动后，在控制台输入命令：cat /proc/config.gz | gzip -d > /home/config
+
+2.2.4 命令执行完后，将会在/home目录下生成config文件
+
+2.2.5 config文件即为我们需要的内核配置文件，可以将其替代.config文件。
+
+【参考】：http://blog.chinaunix.net/u/28814/showart.php?id=391946
