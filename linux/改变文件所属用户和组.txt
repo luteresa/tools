@@ -1,0 +1,2 @@
+ sudo chown -R yyb nfs_test/
+sudo chgrp drivergroup nfs_test/ -R

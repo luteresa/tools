@@ -1,0 +1,42 @@
+gnu tar的1.26版本开始支持lzma和xz压缩，具体压缩实例如下
+
+压缩
+tar -c --xz   -f my_archive.tar.xz   /some_directory    # results in my_archive.tar.xz
+tar -c --lzma -f my_archive.tar.lzma /some_directory    # results in my_archive.tar.lzma
+
+解压缩
+tar -x --xz   -f my_archive.tar.xz      # results in /some_directory
+tar -x --lzma -f my_archive.tar.lzma    # results in /some_directory
+
+其中--xz可以用-J代替
+
+更简洁的方式：
+tar -cJf aaa.tar.xz my_dir
+tar -xJf aaa.tar.xz
+
+或者使用tar的选项"-a"自动识别压缩文件后缀的方式：
+tar -caf aaa.tar.xz my_dir
+tar -xaf aaa.tar.xz
+
+如果你嫌tar.xz 太长了，可以使用txz。
+
+由于受到Dos 8.3文件名格式的限制，tar常使用下列缩写：
+.tgz等价于.tar.gz
+.tbz与tb2等价于.tar.bz2
+.taz等价于.tar.Z
+.tlz等价于.tar.lzma
+.txz等价于.tar.xz
+
+继续补充：
+查看tar包中的文件：
+tar -aft 1.tar.xz
+
+解压缩tar中单独的文件或者目录：
+首先应用上面的命令查看tar包中的文件名和目录，然后使用-x解压缩命令
+$tar -aft 1.tar.xz
+1/
+1/a.bin
+1/b.bin
+1/c.bin
+$tar -axf 1.tar.xz 1/a.bin
+即可解压缩单独的文件a.bin而不用把这个压缩文件全部解压开来

@@ -1,0 +1,18 @@
+yyb@frontendserver:~/gm/8136S$ free -m
+             total       used       free     shared    buffers     cached
+Mem:          3664       3433        231         37        223       2073
+-/+ buffers/cache:       1136       2528
+Swap:            0          0          0
+yyb@frontendserver:~/gm/8136S$ sudo su
+root@frontendserver:/home/yyb/gm/8136S# echo 3 > /proc/sys/vm/drop_caches
+root@frontendserver:/home/yyb/gm/8136S# free
+             total       used       free     shared    buffers     cached
+Mem:       3752680     769340    2983340      38844       1320      74652
+-/+ buffers/cache:     693368    3059312
+Swap:            0          0          0
+root@frontendserver:/home/yyb/gm/8136S# free -m
+             total       used       free     shared    buffers     cached
+Mem:          3664        758       2906         37          3         77
+-/+ buffers/cache:        676       2988
+Swap:            0          0          0
+root@frontendserver:/home/yyb/gm/8136S# 

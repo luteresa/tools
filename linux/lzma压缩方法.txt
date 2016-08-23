@@ -1,0 +1,47 @@
+LZMA  (Lempel-Ziv-Markov  chain-Algorithm)  基于著名的LZ77压缩算法改进的压缩/解压工具，特点：高压缩率，高解压速度，低内存消耗，lzma命令行工具使用方式和gzip,bzip2类似，对已经熟悉gzip，bzip2这类工具的用户来说，上手并不难。
+对比两大主流压缩工具：gzip，bzip2：
+1，lzma和bzip2在速度上面远远输给gzip，但在压缩率方面，lzma算法占优势。
+2，lzma拥有比gzip，bzip2更高的压缩比率，压缩后文件更小，纯文本文件压缩更加明显，在解压方面比bzip2速度快出数倍，对于想要有较高的压缩率，又不想消耗太多内存，lzma是首先。
+3，文件属性，lzma压缩和解压缩能保持文件所有人，权限和修改时间等信息，但是gzip不保存这些信息。
+
+速度：    bzip2 < lzma < gzip
+压缩率： gzip   < bzip2 < lzma
+文件信息：gzip 不保留， bzip2 , lzma 保留
+这么看来，好像没有太多理由再用 bzip2 了？呵呵，不过bzip2仍是我的最爱，目前还没有办法一下子接受lzma，
+虽然lzma很优秀，但我已经习惯了 tar cjvf 和 tar xjvf 了！
+
+lzma在绝大多数Linux和Unix系统中默认安装。
+
+几个主要参数：
+    -d --decompress --uncompress     
+        指定解压缩，比如 lzma  -d test.lzma，该命令相当于 unlzma test.lzma
+    -f --force
+        强制解压/压缩，忽略一切问题，比如：目标文件已经存在，直接覆盖等。
+    -h --help
+        显示帮助
+    -k --keep
+        不删除原始文件，
+    -t --test
+        测试，不解压
+    -v --verbose
+        显示进度等信息，
+    -z --compress
+        强制压缩
+
+用法示例：
+    压缩文件：
+    lzma  test.tar
+        压缩后生成：lzma.tar.lzma 并且原文件 test.tar会被删除，要想保留，添加 -k 选项
+            lzma -k test.tar
+    解压：
+    lzma -d test.tar.lzma 或 unlzma test.tar.lzma
+        解压后 test.tar.lzma默认被删除，如果想保留，添加-k选项，
+    
+    如果目标文件已经存在，lzma不会覆盖，而报错退出执行，
+    添加 -f忽略：
+    lzma -kf test.tar
+        覆盖已经存在的 lzma.tar.lzma 同时保留原文件 test.tar
+    
+    解压：
+    lzma -dkf test.tar.lzma
+        覆盖已经存在的 test.tar 同时保留 test.tar.lzma
