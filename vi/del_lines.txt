@@ -1,3 +1,9 @@
 1.删除含有xxx的行；
 :g/xxx/d
 
+2.保留匹配xxx的行：
+:g!/xxx/d
+
+这种写法，实际上使用了VIM的[multiple Repeats]功能，完整格式
+:[range]g[lobal]/{pattern}/[cmd]
+
